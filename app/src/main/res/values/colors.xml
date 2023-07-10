@@ -1,5 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <color name="transparent">#00000000</color>
+    <color name="keepcon_orange">#F7B733</color>
+    <color name="keepcon_yellow">#FCEA5D</color>
+    <color name="keepcon_light_yellow">#f9cb6b</color>
+    <color name="keepcon_transparent_light_yellow">#d6f9cb6b</color>
+    <color name="keepcon_black">#FF000000</color>
+    <color name="keepcon_white">#FFFFFFFF</color>
+    <color name="keepcon_light_grey">#d3d3d3</color>
+    <color name="keepcon_due_red">#CF6655</color>
+    <color name="keepcon_red">#FFFF0000</color>
+    <color name="keepcon_purple">#7d22ff</color>
+    <color name="keepcon_pink_01">#66e062ff</color>
+    <color name="keepcon_pink_02">#11e062ff</color>
+    <color name="keepcon_due_blue">#8ED2CD</color>
+    <color name="keepcon_due_pink">#FF9797</color>
+    <color name="keepcon_gradient_purple">#6b19ff</color>
+    <color name="keepcon_gradient_pink">#fd62ff</color>
+    <color name="keepcon_black_01">#000000</color>
+    <color name="keepcon_black_01_a08">#14000000</color>
+    <color name="keepcon_black_02">#111111</color>
+    <color name="keepcon_black_03">#0C0D0D</color>
+    <color name="keepcon_transparent_black_03">#770C0D0D</color>
+    <color name="keepcon_grey_01">#5f5f69</color>
+    <color name="keepcon_grey_02">#52514d</color>
+    <color name="keepcon_grey_03">#555555</color>
+    <color name="keepcon_grey_04">#888888</color>
+    <color name="keepcon_grey_05">#939393</color>
+    <color name="keepcon_grey_06">#d1d1d1</color>
+    <color name="keepcon_grey_07">#d6d6d6</color>
+    <color name="keepcon_grey_08">#e9e9e9</color>
+    <color name="keepcon_grey_09">#eeeff1</color>
+    <color name="keepcon_transparent_grey_07">#d2d2d2CC</color>
+    <color name="keepcon_bluegrey">#f2f4f6</color>
+    <color name="keepcon_white_a90">#E6FFFFFF</color>
+    <color name="keepcon_brown">#604309</color>
+    <color name="keepcon_btn_grey">#d2d2d2</color>
+
+    <!--  material  -->
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/keepcon_grey_08</color>
+
+
+
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
