@@ -31,7 +31,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Keepcon"
+        android:theme="@style/Theme.KEEPCON"
         tools:targetApi="31"
         android:exported="true"
         android:launchMode="singleTask"
@@ -50,6 +50,41 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <activity
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="oauth"
+                    android:scheme="kakao${kakao}" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="${kakao}" />
+
+        <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
+
+        <service
+            android:name=".fcm.FirebaseMessagingService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".mms.MMSJobService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
     </application>
 
 </manifest>

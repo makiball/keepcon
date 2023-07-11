@@ -3,6 +3,7 @@ package kr.co.toplink.keepcon.ui.common
 import android.Manifest
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
+import android.content.ComponentName
 import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.PackageManager
@@ -26,12 +27,24 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import com.kakao.sdk.common.util.Utility
 import kr.co.toplink.keepcon.R
 import kr.co.toplink.keepcon.databinding.ActivityMainBinding
-import kr.co.toplink.keepcon.ui.util.CheckPermission
-import kr.co.toplink.keepcon.ui.util.SharedPreferencesUtil
+import kr.co.toplink.keepcon.util.CheckPermission
+import kr.co.toplink.keepcon.util.SharedPreferencesUtil
 
 import com.google.android.gms.wearable.*
 import com.google.android.gms.wearable.Wearable
-import kr.co.toplink.keepcon.ui.util.ShakeDetector
+import kr.co.toplink.keepcon.config.ApplicationClass
+import kr.co.toplink.keepcon.gallery.AddGalleryGifticon
+import kr.co.toplink.keepcon.mms.MMSDialog
+import kr.co.toplink.keepcon.mms.MMSJobService
+import kr.co.toplink.keepcon.repository.fcm.FCMRemoteDataSource
+import kr.co.toplink.keepcon.repository.fcm.FCMRepository
+import kr.co.toplink.keepcon.ui.add.AddFragment
+import kr.co.toplink.keepcon.ui.home.HomeFragment
+import kr.co.toplink.keepcon.ui.login.LoginFragment
+import kr.co.toplink.keepcon.ui.map.MapFragment
+import kr.co.toplink.keepcon.ui.settings.SettingsFragment
+import kr.co.toplink.keepcon.util.RetrofitUtil
+import kr.co.toplink.keepcon.util.ShakeDetector
 
 class MainActivity : AppCompatActivity() {
 
@@ -160,7 +173,7 @@ class MainActivity : AppCompatActivity() {
     private fun setNavBar() {
         window.navigationBarColor = Color.WHITE;
 
-        val radius = resources.getDimension(com.google.android.gms.wearable.R.dimen.radius_small)
+        val radius = resources.getDimension(R.dimen.radius_small)
         val bottomNavigationViewBackground = binding.bottomNav.background as MaterialShapeDrawable
         bottomNavigationViewBackground.shapeAppearanceModel =
             bottomNavigationViewBackground.shapeAppearanceModel.toBuilder()
@@ -170,19 +183,19 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
-                com.google.android.gms.wearable.R.id.homeFragment -> {
+                R.id.homeFragment -> {
                     changeFragment(HomeFragment())
                     true
                 }
-                com.google.android.gms.wearable.R.id.addFragment -> {
+                R.id.addFragment -> {
                     addFragment(AddFragment())
                     true
                 }
-                com.google.android.gms.wearable.R.id.mapFragment -> {
+                R.id.mapFragment -> {
                     changeFragment(MapFragment())
                     true
                 }
-                com.google.android.gms.wearable.R.id.settingsFragment -> {
+                R.id.settingsFragment -> {
                     changeFragment(SettingsFragment())
                     true
                 }
@@ -193,10 +206,10 @@ class MainActivity : AppCompatActivity() {
         //재선택 방지
         binding.bottomNav.setOnItemReselectedListener { menuItem ->
             when (menuItem.itemId) {
-                com.google.android.gms.wearable.R.id.mapFragment -> {}
-                com.google.android.gms.wearable.R.id.addFragment -> {}
-                com.google.android.gms.wearable.R.id.settingsFragment -> {}
-                com.google.android.gms.wearable.R.id.homeFragment -> {}
+                R.id.mapFragment -> {}
+                R.id.addFragment -> {}
+                R.id.settingsFragment -> {}
+                R.id.homeFragment -> {}
             }
         }
     }
@@ -204,14 +217,14 @@ class MainActivity : AppCompatActivity() {
     fun changeFragment(fragment: Fragment) {
         supportFragmentManager
             .beginTransaction()
-            .replace(com.google.android.gms.wearable.R.id.frame_layout_main, fragment)
+            .replace(R.id.frame_layout_main, fragment)
             .commit()
     }
 
     fun addFragment(fragment: Fragment) {
         supportFragmentManager
             .beginTransaction()
-            .replace(com.google.android.gms.wearable.R.id.frame_layout_main, fragment)
+            .replace(R.id.frame_layout_main, fragment)
             .addToBackStack(null)
             .commit()
     }

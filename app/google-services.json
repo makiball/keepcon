@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "372880610317",
+    "project_id": "keepcon-b104d",
+    "storage_bucket": "keepcon-b104d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:372880610317:android:16504e567cced50f217144",
+        "android_client_info": {
+          "package_name": "kr.co.toplink.keepcon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "372880610317-kui6gafdb1pnoa3kjivcrruhgb9h31ke.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhBpShawj1BPpomT0fsbhWX-fQ47sPaNY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "372880610317-kui6gafdb1pnoa3kjivcrruhgb9h31ke.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
