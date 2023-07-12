@@ -1,5 +1,8 @@
 package kr.co.toplink.keepcon.ui.login
 
+import android.animation.Animator
+import android.animation.AnimatorInflater
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -12,6 +15,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.transition.TransitionSet
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.target.DrawableImageViewTarget
@@ -22,6 +26,7 @@ import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.navercorp.nid.NaverIdLoginSDK
+import com.navercorp.nid.NaverIdLoginSDK.applicationContext
 import com.navercorp.nid.oauth.NidOAuthLogin
 import com.navercorp.nid.oauth.OAuthLoginCallback
 import com.navercorp.nid.profile.NidProfileCallback
@@ -85,6 +90,19 @@ class LoginFragment : Fragment() {
     ): View? {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
 
+        /* 휴대폰 움직이기 */
+        val animator =
+            AnimatorInflater.loadAnimator(
+                applicationContext,
+                R.animator.animator_translate_y
+            ) as Animator
+
+        animator.apply {
+            setTarget(binding.popconGif)
+            start()
+        }
+
+        /*
         Glide.with(requireContext()).load(R.raw.pop_1200)
             .into(object : DrawableImageViewTarget(binding.popconGif) {
                 override fun onResourceReady(
@@ -97,7 +115,9 @@ class LoginFragment : Fragment() {
                     super.onResourceReady(resource, transition)
                 }
             })
-        mainActivity.updateStatusBarColor("#F7B733")
+         */
+
+        mainActivity.updateStatusBarColor("#8ED2CD")
         return binding.root
     }
 
