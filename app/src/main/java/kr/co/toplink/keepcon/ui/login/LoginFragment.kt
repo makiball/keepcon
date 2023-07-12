@@ -330,9 +330,10 @@ class LoginFragment : Fragment() {
             Log.d(TAG, "token 정보: ${task.result ?: "task.result is null"}")
 
             if (task.result != null) {
-                //uploadToken(task.result)
-                //fcmViewModel.setToken(task.result)
-                //sp.setFCMToken(task.result)
+
+                uploadToken(task.result)
+                fcmViewModel.setToken(task.result)
+                sp.setFCMToken(task.result)
             }
         }
     }

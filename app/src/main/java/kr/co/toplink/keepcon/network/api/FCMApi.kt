@@ -10,13 +10,13 @@ import retrofit2.http.Query
 
 interface FCMApi {
     @Headers("Authorization: key=${BuildConfig.FIREBASE_GOOGLE_CLOUD_KEY}", "Content-Type:application/json")
-    @POST("fcm/send")
+    @POST("fcm/send.php")
     suspend fun sendNotification(@Body body: FCMResponse)
 
-    @POST("token")
+    @POST("token.php")
     suspend fun uploadToken(@Query("token") token: String): String
-    @POST("broadcast")
+    @POST("broadcast.php")
     suspend fun broadCast(@Query("title") title: String, @Query("body") body: String): Int
-    @POST("sendMessageTo")
+    @POST("sendMessageTo.php")
     suspend fun sendMessageTo(@Query("token")token:String, @Query("title")title:String, @Query("body")body:String)
 }

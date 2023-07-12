@@ -32,10 +32,12 @@ import kr.co.toplink.keepcon.util.SharedPreferencesUtil
 
 import com.google.android.gms.wearable.*
 import com.google.android.gms.wearable.Wearable
+import kr.co.toplink.keepcon.BuildConfig
 import kr.co.toplink.keepcon.config.ApplicationClass
 import kr.co.toplink.keepcon.gallery.AddGalleryGifticon
 import kr.co.toplink.keepcon.mms.MMSDialog
 import kr.co.toplink.keepcon.mms.MMSJobService
+import kr.co.toplink.keepcon.network.api.FCMApi
 import kr.co.toplink.keepcon.repository.fcm.FCMRemoteDataSource
 import kr.co.toplink.keepcon.repository.fcm.FCMRepository
 import kr.co.toplink.keepcon.ui.add.AddFragment
@@ -83,6 +85,12 @@ class MainActivity : AppCompatActivity() {
         bottomNav = binding.bottomNav
         Log.d(TAG, "keyhash : ${Utility.getKeyHash(this)}")
 
+        //val fcmService = ApplicationClass.retrofit.create(FCMApi::class.java)
+        //Log.d(TAG, "====> $fcmService")
+
+        //val fcmRepo = FCMRepository(FCMRemoteDataSource(RetrofitUtil.fcmService))
+        //Log.d(TAG, "====> $fcmRepo")
+
         setNavBar()
         checkPermissions()
         callMMSReceiver()
@@ -98,6 +106,7 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, "onCreate: 로그인 필요")
             changeFragment(LoginFragment())
         }
+
     }
 
     // 앱 실행 시 gallery에서 이미지 불러오기
