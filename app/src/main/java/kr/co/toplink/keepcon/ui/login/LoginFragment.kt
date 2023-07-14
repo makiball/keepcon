@@ -54,10 +54,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.*
 
-
-private const val TAG = "LoginFragment_싸피"
-
 class LoginFragment : Fragment() {
+
+    private val TAG = this.javaClass.simpleName
+
     private lateinit var binding: FragmentLoginBinding
     private val viewModel: UserViewModel by viewModels { ViewModelFactory(requireContext()) }
     private val fcmViewModel: FCMViewModel by viewModels { ViewModelFactory(requireContext()) }
@@ -164,6 +164,8 @@ class LoginFragment : Fragment() {
     private fun successLogin(userResponse: UserResponse) {
         fcmToken = fcmViewModel.token
 
+        //Log.d(TAG, "login: $userResponse")
+
         val newUser = User(
             userResponse.email,
             userResponse.social,
@@ -183,6 +185,7 @@ class LoginFragment : Fragment() {
         )
 
         viewModel.updateUser(newUser)
+
         mainActivity.makeGalleryDialogFragment(requireContext(), mainActivity.contentResolver)
         mainActivity.changeFragment(HomeFragment())
     }
@@ -253,6 +256,7 @@ class LoginFragment : Fragment() {
             val job = CoroutineScope(Dispatchers.IO).launch {
                 userResponse = authRepo.signIn(user)
             }
+
             runBlocking {
                 job.join()
                 ApplicationClass.sharedPreferencesUtil.accessToken =
@@ -265,7 +269,6 @@ class LoginFragment : Fragment() {
                 )
                 successLogin(userResponse)
             }
-
 
 //           viewModel.signInKakao(user)
 //           viewModel.user.observe(viewLifecycleOwner) {

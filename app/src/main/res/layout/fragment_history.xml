@@ -9,7 +9,8 @@
         android:id="@+id/logo"
         android:layout_width="160dp"
         android:layout_height="60dp"
-        android:src="@drawable/popcon"
+        android:layout_margin = "10dp"
+        android:src="@drawable/keepcon_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

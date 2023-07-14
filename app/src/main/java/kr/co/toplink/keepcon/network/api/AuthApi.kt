@@ -12,7 +12,7 @@ interface AuthApi {
 //    @POST("user/login")
 //    suspend fun signIn(@Body user: User) : TokenResponse
 
-    @POST("user/login")
+    @POST("login.php")
     suspend fun signIn(@Body user: User) : UserResponse
 
     @GET("user/refresh")

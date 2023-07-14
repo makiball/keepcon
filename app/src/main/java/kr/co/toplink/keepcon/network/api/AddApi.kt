@@ -11,7 +11,7 @@ import retrofit2.http.Query
 
 interface AddApi {
     @Multipart
-    @POST("files/add_origin")
+    @POST("files_add_origin.php")
     suspend fun addFileToGCP(@Part files:Array<MultipartBody.Part>): List<GCPResult>
 
     @POST("gcp/ocr")

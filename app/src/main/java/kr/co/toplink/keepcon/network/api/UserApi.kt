@@ -9,21 +9,21 @@ import retrofit2.http.POST
 
 interface UserApi {
     //네이버 로그인
-    @POST("user/login/naver")
+    @POST("user/login/naver.php")
     suspend fun signInNaver(@Body user: User): User
 
-    //네이버 로그인
-    @POST("user/login/kakao")
+    //카카오 로그인
+    @POST("kakao.php")
     suspend fun signInKakao(@Body user: User): User
 
     @HTTP(method = "DELETE", path = "user/withdrawal", hasBody = true)
     suspend fun withdraw(@Body user: UserDeleteRequest)
 
     // 회원정보 변경
-    @POST("user/update")
+    @POST("user_update.php")
     suspend fun updateUser(@Body user: User): User
 
     // user level 받아오기
-    @GET("user/getlevel")
+    @GET("getlevel.php")
     suspend fun getUserLv(): Int
 }

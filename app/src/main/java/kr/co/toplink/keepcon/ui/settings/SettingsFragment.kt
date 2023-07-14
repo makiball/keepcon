@@ -35,13 +35,13 @@ class SettingsFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
     private lateinit var user: User
     private lateinit var fcmToken: String
-    private lateinit var shardPreference:SharedPreferences
+    private lateinit var sp : SharedPreferences
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         user = SharedPreferencesUtil(requireContext()).getUser()
         fcmToken = SharedPreferencesUtil(requireContext()).getFCMToken()
-        shardPreference = SharedPreferencesUtil(requireContext()).preferences
+        sp = SharedPreferencesUtil(requireContext()).preferences
         mainActivity = context as MainActivity
     }
 
@@ -56,16 +56,16 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSettingsBinding.inflate(inflater, container, false)
-        val timeZone = shardPreference.getInt("noti_time", 1)
+        val timeZone = sp.getInt("noti_time", 1)
         changeTime(timeZone)
 
         user = User(
             user.email,
             user.social,
-            shardPreference.getInt("noti_first", 1),
-            shardPreference.getInt("alarm", 1),
-            shardPreference.getInt("manner_temp", 0),
-            shardPreference.getInt("noti_interval", 1),
+            sp.getInt("noti_first", 1),
+            sp.getInt("alarm", 1),
+            sp.getInt("manner_temp", 0),
+            sp.getInt("noti_interval", 1),
             timeZone,
             fcmToken
         )
@@ -152,11 +152,11 @@ class SettingsFragment : Fragment() {
         val newUser = User(
             user.email,
             user.social,
-            shardPreference.getInt("noti_first", 1),
-            shardPreference.getInt("alarm", 1),
+            sp.getInt("noti_first", 1),
+            sp.getInt("alarm", 1),
             userTmp,
-            shardPreference.getInt("noti_interval", 1),
-            shardPreference.getInt("noti_time", 1),
+            sp.getInt("noti_interval", 1),
+            sp.getInt("noti_time", 1),
             user.token
         )
         SharedPreferencesUtil(requireContext()).updateUser(newUser)

@@ -22,8 +22,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.TimeUnit
 
-private const val TAG = "ApplicationClass_싸피"
 class ApplicationClass : Application() {
+
+    private val TAG = this.javaClass.simpleName
+
     companion object {
         const val SERVER_URL = BuildConfig.BASE_URL
 

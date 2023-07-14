@@ -5,13 +5,18 @@ import retrofit2.http.*
 
 interface GifticonApi {
     //사용자 기프티콘 목록
-    @GET("gifticons/{email}/{social}")
+    //@GET("gifticons/{email}/{social}")
+    @GET("gifticons.php")
     suspend fun getGifticonByUser(
-        @Path("email") email: String,
-        @Path("social") social: String
+        //@Path("email") email: String,
+        //@Path("social") social: String
+        @Query("email") email: String,
+        @Query("social") social: String
+
     ): List<Gifticon>
 
-    @GET("gifticons/{email}/{social}/map")
+    //@GET("gifticons/{email}/{social}/map")
+    @GET("gifticons.php")
     suspend fun getGifticonMapByUser(
         @Path("email") email: String,
         @Path("social") social: String
@@ -24,10 +29,13 @@ interface GifticonApi {
     ) : GifticonResponse
 
     //사용자 기프티콘 브랜드 목록
-    @GET("gifticons/brandsort/{email}/{social}")
+    //@GET("gifticons/brandsort/{email}/{social}")
+    @GET("gifticons_brandsort.php")
     suspend fun getBrandHome(
-        @Path("email") email: String,
-        @Path("social") social: String,
+        //@Path("email") email: String,
+        //@Path("social") social: String
+        @Query("email") email: String,
+        @Query("social") social: String
     ) : List<BrandResponse>
 
     //현재위치에서 가능한 브랜드 목록
@@ -39,7 +47,7 @@ interface GifticonApi {
     suspend fun getGifticonByBrand(@Body gifticonByBrandRequest: GifticonByBrandRequest): List<Gifticon>
 
     //히스토리
-    @POST("gifticons/history")
+    @POST("history.php")
     suspend fun getHistory(@Body req: UserDeleteRequest): List<Gifticon>
 
     //업데이트

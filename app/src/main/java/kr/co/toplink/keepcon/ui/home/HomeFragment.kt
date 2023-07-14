@@ -38,15 +38,15 @@ import kr.co.toplink.keepcon.util.SharedPreferencesUtil
 import kr.co.toplink.keepcon.viewmodel.GifticonViewModel
 import kr.co.toplink.keepcon.viewmodel.ViewModelFactory
 
-private const val TAG = "HomeFragment"
-
 class HomeFragment : Fragment() {
+
+    private val TAG = this.javaClass.simpleName
+
     private lateinit var binding: FragmentHomeBinding
     private lateinit var shakeDetector: ShakeDetector
     lateinit var gifticonAdapter: GiftconAdapter
     private val viewModel: GifticonViewModel by activityViewModels { ViewModelFactory(requireContext()) }
     private lateinit var mainActivity: MainActivity
-    val TAG = "HOME"
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
