@@ -23,11 +23,11 @@ data class GifticonItem(
     val barcodeNum :	    String,
     val barcodePos :	    String?,
     val barcode_filepath :	String?,
+    val productName:		String?,
+    val productPost:		String?,
     val brand:			    String?,
     val due	:               Date?,
     val price	:		    Int = 0,
     val memo	:		    String?,
-    val productName:		String?,
-    val productPost:		String?,
     val state	:		    Int = 0
 )
