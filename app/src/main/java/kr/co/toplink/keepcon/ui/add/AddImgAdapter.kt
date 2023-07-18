@@ -8,20 +8,12 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kr.co.toplink.keepcon.R
 import kr.co.toplink.keepcon.databinding.ItemAddImgBinding
-import kr.co.toplink.keepcon.dto.AddInfo
-import kr.co.toplink.keepcon.dto.AddInfoNoImgBoolean
-import kr.co.toplink.keepcon.dto.GifticonImg
-import kr.co.toplink.keepcon.dto.OCRSend
+import kr.co.toplink.keepcon.dto.*
 import kr.co.toplink.keepcon.ui.common.MainActivity
 import kr.co.toplink.keepcon.ui.home.HomeFragment
 
 class AddImgAdapter(
-    var gifticonInfoList: ArrayList<AddInfo>
-    , var originalImgUriList: ArrayList<GifticonImg>
-    , var cropXyImgUriList: ArrayList<GifticonImg>
-    , var barcodeImgUriList: ArrayList<GifticonImg>
-    , var ocrSendList: ArrayList<OCRSend>
-    , var gifticonEffectiveness: ArrayList<AddInfoNoImgBoolean>
+    var gifticonItemList: ArrayList<GifticonItemList>
     , _onItemClick: onItemClick
 ):
     RecyclerView.Adapter<AddImgAdapter.AddImgViewHolder>() {
@@ -33,13 +25,16 @@ class AddImgAdapter(
 
     inner class AddImgViewHolder(private val binding: ItemAddImgBinding):
         RecyclerView.ViewHolder(binding.root){
-        fun bind(gifticonImg: GifticonImg){
+        fun bind(gifticonImg: GifticonItemList){
             binding.ivChkClick.bringToFront()
+
+
             if (bindingAdapterPosition == 0){
                 binding.ivChkClick.visibility = View.GONE
                 positionSet.add(0)
             }
 
+            /*
             if (bindingAdapterPosition == nowClick){
                 binding.ivChkClick.visibility = View.GONE
                 binding.cvCouponImg.backgroundTintList =
@@ -63,24 +58,20 @@ class AddImgAdapter(
 
             binding.gifticonImg = gifticonImg
             binding.btnRemove.setOnClickListener {
-                gifticonInfoList.removeAt(bindingAdapterPosition)
-                originalImgUriList.removeAt(bindingAdapterPosition)
-                cropXyImgUriList.removeAt(bindingAdapterPosition)
-                barcodeImgUriList.removeAt(bindingAdapterPosition)
-                ocrSendList.removeAt(bindingAdapterPosition)
-                gifticonEffectiveness.removeAt(bindingAdapterPosition)
+                gifticonItemList.removeAt(bindingAdapterPosition)
                 notifyItemRemoved(bindingAdapterPosition)
 
                 if (bindingAdapterPosition == nowClick){
                     nowClick = bindingAdapterPosition+1
                 }
 
-                if (originalImgUriList.size == 0){
+                if (gifticonItemList.size == 0){
                     mainActivity.changeFragment(HomeFragment())
                 } else{
                     onItemClick.onClick(nowClick)
                 }
             }
+             */
         }
     }
 
@@ -93,11 +84,11 @@ class AddImgAdapter(
 
     override fun onBindViewHolder(holder: AddImgViewHolder, position: Int) {
         holder.apply {
-            bind(originalImgUriList[position])
+            bind(gifticonItemList[position])
         }
     }
 
     override fun getItemCount(): Int {
-        return originalImgUriList.size
+        return gifticonItemList.size
     }
 }

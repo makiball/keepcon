@@ -217,6 +217,7 @@ class AddFragment : Fragment(), onItemClick{
     //리스트 이미지 등록
     private suspend fun gallyadd(clipData: ClipData){
         cvAddCouponClick()
+        gifticonItemList.clear()
 
         for (i in 0 until clipData.itemCount) {
             val originalImgUri = clipData.getItemAt(i).uri
@@ -227,19 +228,41 @@ class AddFragment : Fragment(), onItemClick{
             val extractor = BarcodeAndTextExtractor(requireContext())
             val (barcodes, texts) = extractor.extractBarcodeAndText(originalImgUri)
 
+            var barcodeNum : String? = null
+            var barcodePos : String? = null
+
             // 바코드 정보 활용
             for (barcode in barcodes) {
                 val valueType = barcode.valueType
                 val rawValue = barcode.rawValue
                 // ... 바코드 정보 활용 ...
-                Log.d(TAG,"=====> ${barcode.rawValue}")
+                //Log.d(TAG,"=====> ${barcode.rawValue}")
+
+                barcodeNum = barcode.rawValue
+                barcodePos = barcode.boundingBox.toString()
             }
 
             // 텍스트 정보 활용
             for (text in texts) {
                 // ... 텍스트 정보 활용 ...
             }
+
+            //바코드 있는것만
+            if(barcodeNum != null) {
+                gifticonItemList.add(
+                    GifticonItemList(
+                        barcodeNum = barcodeNum,
+                        barcodePos = barcodePos,
+                        barcode_filepath = originalImgUri
+                    )
+                )
+            }
         }
+
+
+        Log.d(TAG,"=====> $gifticonItemList")
+        makeImgList()
+        changeProgressDialogState(false)
     }
 
     // 갤러리에서 이미지 등록 시
@@ -608,12 +631,7 @@ class AddFragment : Fragment(), onItemClick{
     // 상단 리사이클러뷰 만들기
     private fun makeImgList(){
         addImgAdapter = AddImgAdapter(
-            gifticonInfoList,
-            originalImgUris,
-            productImgUris,
-            barcodeImgUris,
-            ocrSendList,
-            gifticonEffectiveness,
+            gifticonItemList,
             this
         )
 
