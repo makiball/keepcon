@@ -18,5 +18,5 @@ interface GifticonItemDataSource {
     suspend fun deleteGifticonItem(phoneNumber: String)
 
     // delete
-    suspend fun deleteAll()
+    suspend fun gifticondeleteAll()
 }

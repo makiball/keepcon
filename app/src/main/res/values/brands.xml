@@ -3,8 +3,8 @@
     <string name="BBQ">https://contents.lotteon.com/search/brand/P1/99/4/P1994_320_320.jpg/dims/optimize/dims/resize/400x400</string>
     <string name="BHC">https://contents.lotteon.com/search/brand/P6/58/9/P6589_320_320.jpg/dims/optimize/dims/resize/400x400</string>
     <string name="CGV">https://contents.lotteon.com/search/brand/P9/33/6/P9336_320_320.jpg/dims/optimize/dims/resize/400x400</string>
-    <string name="CJ">https://images.squarespace-cdn.com/content/v1/5b35dd4b36099b1e5fe89dfb/1533108769853-7KCLCJLUTPBSE8VGLW6T/CJ.jpg?format=1000w</string>
-    <string name="CJ푸드빌">https://s3.ap-northeast-2.amazonaws.com/media.linkareer.com/activity_manager/thumbnail/2017-08-03123343f2017-08-031232559047580_CJ%ED%91%B8%EB%93%9C%EB%B9%8C_thumbnail</string>
+    <string name="CJ">https://images.squarespace-cdn.com/content/v1/5b35dd4b36099b1e5fe89dfb/1533108769853\-7KCLCJLUTPBSE8VGLW6T/CJ.jpg?format=1000w</string>
+    <string name="CJ푸드빌">https://s3.ap\-northeast\-2.amazonaws.com/media.linkareer.com/activity_manager/thumbnail/2017\-08\-03123343f2017\-08\-031232559047580_CJ%ED%91%B8%EB%93%9C%EB%B9%8C_thumbnail</string>
     <string name="CU">https://contents.lotteon.com/search/brand/P9/55/3/P9553_320_320.jpg/dims/optimize/dims/resize/400x400</string>
     <string name="GS25">https://contents.lotteon.com/search/brand/P3/76/1/P3761_320_320.jpg/dims/optimize/dims/resize/400x400</string>
     <string name="GSSHOP">https://image.happymoney.co.kr/extimage/useStore/1518079335602.jpg</string>

@@ -56,6 +56,11 @@ class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory
             modelClass.isAssignableFrom(MMSViewModel::class.java) ->{
                 MMSViewModel(ApplicationClass().provideMMSRepository(context)) as T
             }
+
+            modelClass.isAssignableFrom(GifticonItemViewModel::class.java) -> {
+                GifticonItemViewModel(ApplicationClass().provideGifticonItemRepository(context)) as T
+            }
+
             else -> {
                 throw IllegalArgumentException("Failed to create ViewModel: ${modelClass.name}")
             }

@@ -71,6 +71,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
+    implementation 'com.google.mlkit:barcode-scanning:17.1.0'
+    implementation 'com.google.mlkit:text-recognition-korean:16.0.0'
+
     // Database
     implementation "androidx.room:room-runtime:2.5.2"
     implementation "androidx.room:room-ktx:2.5.2"

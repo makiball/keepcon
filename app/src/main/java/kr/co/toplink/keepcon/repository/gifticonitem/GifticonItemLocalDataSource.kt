@@ -30,7 +30,7 @@ class GifticonItemLocalDataSource (
     }
 
     // delete
-    override suspend fun deleteAll(){
+    override suspend fun gifticondeleteAll(){
         dao.gifticon_deleteAll()
     }
 }

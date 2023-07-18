@@ -2,7 +2,6 @@ package kr.co.toplink.keepcon.ui.add
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ContentResolver
 import android.content.ContentValues
@@ -10,18 +9,9 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
-import android.graphics.ImageFormat.JPEG
-import android.graphics.drawable.ColorDrawable
-import android.media.MediaCodec.MetricsConstants.MIME_TYPE
 import android.net.Uri
 import android.os.*
-import android.os.Environment.DIRECTORY_PICTURES
-import android.provider.ContactsContract.CommonDataKinds.Email.DISPLAY_NAME
-import android.provider.MediaStore
-import android.provider.MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
 import android.provider.MediaStore.Images
-import android.provider.MediaStore.MediaColumns.IS_PENDING
-import android.provider.MediaStore.MediaColumns.RELATIVE_PATH
 import android.provider.OpenableColumns
 import android.text.Editable
 import android.text.TextWatcher
@@ -39,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.JsonParser
+import com.google.mlkit.vision.barcode.common.Barcode
 import com.soundcloud.android.crop.Crop
 import kr.co.toplink.keepcon.R
 import kr.co.toplink.keepcon.config.ApplicationClass
@@ -49,10 +40,10 @@ import kr.co.toplink.keepcon.ui.common.MainActivity
 import kr.co.toplink.keepcon.ui.common.onSingleClickListener
 import kr.co.toplink.keepcon.ui.home.HomeFragment
 import kr.co.toplink.keepcon.ui.popup.GifticonDialogFragment.Companion.isShow
-import kr.co.toplink.keepcon.util.SharedPreferencesUtil
 import kr.co.toplink.keepcon.viewmodel.AddViewModel
 import kr.co.toplink.keepcon.viewmodel.ViewModelFactory
 import kotlinx.coroutines.*
+import kr.co.toplink.keepcon.util.BarcodeAndTextExtractor
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -60,16 +51,19 @@ import okhttp3.RequestBody
 import okio.BufferedSink
 import okio.source
 import java.io.*
-import java.nio.file.Files
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
 private const val TAG = "AddFragment"
-class AddFragment : Fragment(), onItemClick {
+class AddFragment : Fragment(), onItemClick{
     private lateinit var binding: FragmentAddBinding
     private lateinit var mainActivity: MainActivity
     private val viewModel: AddViewModel by viewModels { ViewModelFactory(requireContext()) }
+
+    //새로 만들자
+    private var gifticonItemList = ArrayList<GifticonItemList>()
+
 
     private var delImgUris = ArrayList<Uri>()
     private var multipartFiles = ArrayList<MultipartBody.Part>()
@@ -186,10 +180,14 @@ class AddFragment : Fragment(), onItemClick {
                 Activity.RESULT_OK -> {
                     val clipData = it.data!!.clipData
 
+
                     if (clipData != null) {  //첫 add
                         gifticonInfoList.clear()
 
-                        firstAdd(clipData)
+                        runBlocking {
+                           gallyadd(clipData)
+                        }
+
                     } else{  //수동 크롭
                         if (clickCv == PRODUCT){
                             productImgUris[imgNum] = GifticonImg(Crop.getOutput(it.data))
@@ -216,6 +214,34 @@ class AddFragment : Fragment(), onItemClick {
         gifticonInfoList.add(AddInfo())
     }
 
+    //리스트 이미지 등록
+    private suspend fun gallyadd(clipData: ClipData){
+        cvAddCouponClick()
+
+        for (i in 0 until clipData.itemCount) {
+            val originalImgUri = clipData.getItemAt(i).uri
+            if (!getFileSize(originalImgUri)) {
+                continue
+            }
+
+            val extractor = BarcodeAndTextExtractor(requireContext())
+            val (barcodes, texts) = extractor.extractBarcodeAndText(originalImgUri)
+
+            // 바코드 정보 활용
+            for (barcode in barcodes) {
+                val valueType = barcode.valueType
+                val rawValue = barcode.rawValue
+                // ... 바코드 정보 활용 ...
+                Log.d(TAG,"=====> ${barcode.rawValue}")
+            }
+
+            // 텍스트 정보 활용
+            for (text in texts) {
+                // ... 텍스트 정보 활용 ...
+            }
+        }
+    }
+
     // 갤러리에서 이미지 등록 시
     private fun firstAdd(clipData: ClipData){
         cvAddCouponClick()
@@ -225,20 +251,38 @@ class AddFragment : Fragment(), onItemClick {
             if (!getFileSize(originalImgUri)){
                 continue
             }
-            originalImgUris.add(GifticonImg(originalImgUri))
-            gifticonEffectiveness.add(AddInfoNoImgBoolean())
 
-            val realData = originalImgUri.asMultipart("file", requireContext().contentResolver)
-            multipartFiles.add(realData!!)
+            /*
+            gifticonItemList.add(
+                GifticonItemList(
+                    barcode_filepath = originalImgUri
+                )
+            )
+             */
+
+            //originalImgUris.add(GifticonImg(originalImgUri))
+            //gifticonEffectiveness.add(AddInfoNoImgBoolean())
+            //val realData = originalImgUri.asMultipart("file", requireContext().contentResolver)
+            //Log.d(TAG,"=====> $realData")
+            //multipartFiles.add(realData!!)
         }
 
-        if(multipartFiles.size < 1){
+        /*
+        Log.d(TAG,"=====> $gifticonItemList")
+
+
+        if(gifticonItemList.size < 1){
             onDestroyView()
             Toast.makeText(requireContext(), "잘못된 이미지 입니다", Toast.LENGTH_SHORT).show()
             mainActivity.changeFragment(HomeFragment())
             return
         }
+        */
 
+        Log.d(TAG,"=====> ${multipartFiles.size}")
+
+        changeProgressDialogState(false)
+/*
         viewModel.addFileToGCP(multipartFiles.toTypedArray())
         viewModel.gcpResult.observe(viewLifecycleOwner, EventObserver{
             for (i in 0 until it.size){
@@ -274,6 +318,7 @@ class AddFragment : Fragment(), onItemClick {
                 makeImgList()
             })
         })
+ */
     }
 
     // get img size

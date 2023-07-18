@@ -14,10 +14,10 @@ interface AddApi {
     @POST("files_add_origin.php")
     suspend fun addFileToGCP(@Part files:Array<MultipartBody.Part>): List<GCPResult>
 
-    @POST("gcp/ocr")
+    @POST("gcp_ocr.php")
     suspend fun useOCR(@Body fileName:Array<OCRSend>): List<OCRResult>
 
-    @GET("gcp/ocr/check_brand")
+    @GET("check_brand.php")
     suspend fun chkBrand(@Query("brandName") brandName: String): ChkValidation
 
     @GET("gcp/ocr/check_barcode")

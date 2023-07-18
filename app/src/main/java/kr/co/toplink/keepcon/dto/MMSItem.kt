@@ -5,9 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.*
 
-@Entity(
-    tableName = "mms_item"
-)
+@Entity(tableName = "mms_item")
 data class MMSItem(
     @PrimaryKey @ColumnInfo(name = "phoneNumber")
     val phoneNumber : String,

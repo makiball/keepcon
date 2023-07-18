@@ -10,6 +10,9 @@ import com.kakao.sdk.user.UserApiClient
 import com.navercorp.nid.NaverIdLoginSDK
 import kr.co.toplink.keepcon.BuildConfig
 import kr.co.toplink.keepcon.database.AppDatabase
+import kr.co.toplink.keepcon.repository.gifticonitem.GifticonItemDataSource
+import kr.co.toplink.keepcon.repository.gifticonitem.GifticonItemLocalDataSource
+import kr.co.toplink.keepcon.repository.gifticonitem.GifticonItemRepository
 import kr.co.toplink.keepcon.repository.mms.MMSLocalDataSource
 import kr.co.toplink.keepcon.repository.mms.MMSRepository
 import kr.co.toplink.keepcon.util.AuthInterceptor
@@ -91,6 +94,16 @@ class ApplicationClass : Application() {
             val dao = provideDatabase(context.applicationContext).mmsDao()
             MMSRepository(MMSLocalDataSource(dao)).also {
                 mmsRepository = it
+            }
+        }
+    }
+
+    private var gifticonItemRepository: GifticonItemRepository? = null
+    fun provideGifticonItemRepository(context: Context): GifticonItemRepository {
+        return gifticonItemRepository ?: kotlin.run {
+            val dao = provideDatabase(context.applicationContext).mmsDao()
+            GifticonItemRepository(GifticonItemLocalDataSource(dao)).also{
+                gifticonItemRepository = it
             }
         }
     }

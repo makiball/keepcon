@@ -45,9 +45,9 @@ class GifticonItemRepository(
         }
     }
 
-    suspend fun deleteAll()  {
+    suspend fun gifticondeleteAll()  {
         withContext(ioDispatcher){
-            LocalDataSource.deleteAll()
+            LocalDataSource.gifticondeleteAll()
         }
     }
 }
