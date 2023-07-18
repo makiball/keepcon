@@ -34,7 +34,6 @@ class AddImgAdapter(
                 positionSet.add(0)
             }
 
-            /*
             if (bindingAdapterPosition == nowClick){
                 binding.ivChkClick.visibility = View.GONE
                 binding.cvCouponImg.backgroundTintList =
@@ -43,6 +42,7 @@ class AddImgAdapter(
                 binding.cvCouponImg.backgroundTintList =
                     ColorStateList.valueOf(ContextCompat.getColor(binding.root.context, R.color.transparent))
             }
+
 
             binding.cvCouponImg.setOnClickListener {
                 onItemClick.onClick(bindingAdapterPosition)
@@ -56,7 +56,10 @@ class AddImgAdapter(
                 AddFragment.chkCnt = positionSet.size
             }
 
-            binding.gifticonImg = gifticonImg
+            //binding.gifticonImg = gifticonImg
+            //binding.gifticonImg.setgifticonImg.productName_bitmap
+            binding.ivCouponImg.setImageBitmap(gifticonImg.productName_bitmap)
+
             binding.btnRemove.setOnClickListener {
                 gifticonItemList.removeAt(bindingAdapterPosition)
                 notifyItemRemoved(bindingAdapterPosition)
@@ -71,7 +74,6 @@ class AddImgAdapter(
                     onItemClick.onClick(nowClick)
                 }
             }
-             */
         }
     }
 

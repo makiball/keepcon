@@ -35,7 +35,8 @@
                 android:scaleType="centerCrop"
                 android:adjustViewBounds="true"
                 android:layout_gravity="center"
-                app:imageUri="@{gifticonImg.imgUri}"/>
+                />
+                <!--app:imageUri="@{gifticonImg.imgUri}" -->
 
             <ImageButton
                 android:id="@+id/btn_remove"

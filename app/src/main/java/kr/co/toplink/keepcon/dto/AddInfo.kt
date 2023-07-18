@@ -1,5 +1,6 @@
 package kr.co.toplink.keepcon.dto
 
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.core.net.toUri
 import androidx.room.ColumnInfo
@@ -171,7 +172,9 @@ data class GifticonItemList(
     val barcodeNum :	    String? = null,
     val barcodePos :	    String? = null,
     val barcode_filepath :	Uri? = null,
+    val barcode_bitmap :	Bitmap? = null,
     val productName:		String? = null,
+    val productName_bitmap:		Bitmap? = null,
     val productPost:		String? = null,
     val brand:			    String? = null,
     val due	:               Date? = Date(),

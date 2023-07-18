@@ -12,7 +12,7 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 def kakaoApiKey = properties.getProperty('kakao_map_key')
 
 android {
-    namespace 'kr.co.toplink.keepcon'
+    namespace 'kr.co.toplink.keepcon'  
     compileSdk 33
 
     defaultConfig {

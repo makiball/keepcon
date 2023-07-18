@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
+import android.graphics.Rect
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore.Images
@@ -29,7 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.JsonParser
-import com.google.mlkit.vision.barcode.common.Barcode
+
 import com.soundcloud.android.crop.Crop
 import kr.co.toplink.keepcon.R
 import kr.co.toplink.keepcon.config.ApplicationClass
@@ -63,7 +64,7 @@ class AddFragment : Fragment(), onItemClick{
 
     //새로 만들자
     private var gifticonItemList = ArrayList<GifticonItemList>()
-
+    private val regex = "[^0-9,]".toRegex()
 
     private var delImgUris = ArrayList<Uri>()
     private var multipartFiles = ArrayList<MultipartBody.Part>()
@@ -231,21 +232,41 @@ class AddFragment : Fragment(), onItemClick{
             var barcodeNum : String? = null
             var barcodePos : String? = null
 
+            var productName : String? = null
+            var brand : String? = null
+            var productPost = "42,50,681,630"
+
             // 바코드 정보 활용
             for (barcode in barcodes) {
                 val valueType = barcode.valueType
                 val rawValue = barcode.rawValue
                 // ... 바코드 정보 활용 ...
-                //Log.d(TAG,"=====> ${barcode.rawValue}")
+
+                Log.d(TAG,"=====> ${barcode.boundingBox}")
 
                 barcodeNum = barcode.rawValue
-                barcodePos = barcode.boundingBox.toString()
+                barcodePos = barcode.boundingBox.toString().replace("-",",")
+                barcodePos = barcodePos.replace(regex,"")
             }
 
             // 텍스트 정보 활용
             for (text in texts) {
                 // ... 텍스트 정보 활용 ...
+               // Log.d(TAG,"=====> $text")
             }
+
+            productName = texts.get(1)
+            brand = texts.get(0)
+            productPost = productPost
+
+
+            if(texts.size >= 9) {
+                if (texts.get(9) != "kakaotalk선물하기") {
+                    productPost = "0,0,100,100"
+                }
+            }
+
+            Log.d(TAG,"=====> $barcodePos $productPost")
 
             //바코드 있는것만
             if(barcodeNum != null) {
@@ -253,7 +274,12 @@ class AddFragment : Fragment(), onItemClick{
                     GifticonItemList(
                         barcodeNum = barcodeNum,
                         barcodePos = barcodePos,
-                        barcode_filepath = originalImgUri
+                        barcode_filepath = originalImgUri,
+                        barcode_bitmap = cropToBitmap(uriToBitmap(originalImgUri), barcodePos!!),
+                        productName = productName,
+                        productPost = productPost,
+                        productName_bitmap = cropToBitmap(uriToBitmap(originalImgUri), productPost!!),
+                        brand = brand
                     )
                 )
             }
@@ -1070,6 +1096,25 @@ class AddFragment : Fragment(), onItemClick{
             return false
         }
         return true
+    }
+
+    //크롭후 비트맵으로 저장
+    private fun cropToBitmap(bitmap: Bitmap, pos : String) : Bitmap? {
+
+        val pos_crop = pos.split(",").toTypedArray()
+        if(pos_crop.size < 4) {
+            return bitmap
+        }
+        val left = pos_crop[0].toInt()
+        val top =  pos_crop[1].toInt()
+        val right =  pos_crop[2].toInt()
+        val bottom =  pos_crop[3].toInt()
+        val cropRect = Rect(left, top, right, bottom)
+        val croppedBitmap = Bitmap.createBitmap(bitmap, cropRect.left,cropRect.top, cropRect.width(),cropRect.height())
+
+        Log.d(TAG,"=====> $right, $bottom")
+
+        return croppedBitmap
     }
 
     override fun onDestroyView() {

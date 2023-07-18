@@ -7,7 +7,8 @@ import android.util.Log
 import kr.co.toplink.keepcon.dto.Gallery
 import kr.co.toplink.keepcon.dto.User
 
-class SharedPreferencesUtil(context: Context) {
+class
+SharedPreferencesUtil(context: Context) {
     val SHARED_PREFERENCES_NAME = "popcon_preference"
     val preferences: SharedPreferences =
         context.getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE)
