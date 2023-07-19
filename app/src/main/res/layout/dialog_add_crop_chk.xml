@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="gifticonImg"
-            type="kr.co.toplink.keepcon.dto.GifticonImg" />
+            name="gifticonItemList"
+            type="kr.co.toplink.keepcon.dto.GifticonItemList" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +24,7 @@
             android:adjustViewBounds="true"
             android:maxHeight="500dp"
             android:background="@drawable/edge_dialog"
-            app:imageUri="@{gifticonImg.imgUri}"
+            app:imageUri="@{gifticonItemList.barcode_filepath}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>

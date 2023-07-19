@@ -2,15 +2,30 @@ package kr.co.toplink.keepcon.dto
 
 import android.graphics.Bitmap
 import android.net.Uri
-import androidx.core.net.toUri
-import androidx.room.ColumnInfo
 import androidx.room.PrimaryKey
+import kr.co.toplink.keepcon.ui.home.ProductBox
 import java.util.*
 
 data class GifticonImg(
-    val imgUri: Uri
+    val imgUri: Uri?
 )
 
+data class AddInfo(
+    val barcodeNum:	        String? = null,
+    val barcode_filepath:	Uri? = null,
+    val barcodePos:	        String? = null,
+    val barcode_bitmap:	    Bitmap? = null,
+    val productName:		String? = null,
+    val productPos:         String? = null,
+    val productName_bitmap:	Bitmap? = null,
+    val brand:			    String? = null,
+    val due:                Date? = Date(),
+    val price:		        Int = 0,
+    val memo:		        String? = null,
+    val state:		        Int = 0
+)
+
+/*
 data class AddInfo(
     val originalImgUri:Uri,
     val gifticonImgUri: Uri,
@@ -72,6 +87,8 @@ data class AddInfo(
         ""
     )
 }
+ */
+
 
 data class AddInfoNoImg(
     val barcodeNum: String,
@@ -167,18 +184,17 @@ data class AddImgInfoResult(
     val filePath: String
 )
 
-
 data class GifticonItemList(
-    val barcodeNum :	    String? = null,
-    val barcodePos :	    String? = null,
-    val barcode_filepath :	Uri? = null,
-    val barcode_bitmap :	Bitmap? = null,
+    val barcodeNum:	        String? = null,
+    val barcode_filepath:	Uri? = null,
+    val barcodePos:	        String? = null,
+    val barcode_bitmap:	    Bitmap? = null,
     val productName:		String? = null,
-    val productName_bitmap:		Bitmap? = null,
-    val productPost:		String? = null,
+    val productPos:         String? = null,
+    val productName_bitmap:	Bitmap? = null,
     val brand:			    String? = null,
-    val due	:               Date? = Date(),
-    val price	:		    Int = 0,
-    val memo	:		    String? = null,
-    val state	:		    Int = 0
+    val due:                Date? = Date(),
+    val price:		        Int = 0,
+    val memo:		        String? = null,
+    val state:		        Int = 0
 )

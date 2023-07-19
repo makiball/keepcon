@@ -28,7 +28,6 @@ class AddImgAdapter(
         fun bind(gifticonImg: GifticonItemList){
             binding.ivChkClick.bringToFront()
 
-
             if (bindingAdapterPosition == 0){
                 binding.ivChkClick.visibility = View.GONE
                 positionSet.add(0)
@@ -43,7 +42,6 @@ class AddImgAdapter(
                     ColorStateList.valueOf(ContextCompat.getColor(binding.root.context, R.color.transparent))
             }
 
-
             binding.cvCouponImg.setOnClickListener {
                 onItemClick.onClick(bindingAdapterPosition)
                 binding.ivChkClick.visibility = View.GONE
@@ -56,7 +54,7 @@ class AddImgAdapter(
                 AddFragment.chkCnt = positionSet.size
             }
 
-            //binding.gifticonImg = gifticonImg
+            //binding.gifticonItemList = gifticonImg
             //binding.gifticonImg.setgifticonImg.productName_bitmap
             binding.ivCouponImg.setImageBitmap(gifticonImg.productName_bitmap)
 

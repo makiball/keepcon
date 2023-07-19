@@ -3,7 +3,10 @@ package kr.co.toplink.keepcon.ui.add
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
@@ -12,14 +15,15 @@ import androidx.fragment.app.DialogFragment
 import kr.co.toplink.keepcon.R
 import kr.co.toplink.keepcon.databinding.DialogAddCropChkBinding
 import kr.co.toplink.keepcon.dto.GifticonImg
+import kr.co.toplink.keepcon.dto.GifticonItemList
 
-class CropImgDialogFragment(_gifticonImg: GifticonImg, private val clickFromCv:String): DialogFragment() {
+class CropImgDialogFragment(gifticonItemList: GifticonItemList, private val clickFromCv:String): DialogFragment() {
     private lateinit var binding:DialogAddCropChkBinding
 
-    private var gifticonImg:GifticonImg
+    private var _gifticonItemList : GifticonItemList
 
     init {
-        gifticonImg = _gifticonImg
+        _gifticonItemList = gifticonItemList
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -32,7 +36,14 @@ class CropImgDialogFragment(_gifticonImg: GifticonImg, private val clickFromCv:S
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         binding.ivCropImg.clipToOutline = true
 
-        binding.gifticonImg = gifticonImg
+        val colorDrawable = ColorDrawable(Color.TRANSPARENT)
+        binding.ivCropImg.background  = colorDrawable
+        binding.gifticonItemList = _gifticonItemList
+
+
+        binding.ivCropImg.setImageBitmap(_gifticonItemList.productName_bitmap)
+
+
         binding.btnCancel.setOnClickListener{
             dismiss()
         }
