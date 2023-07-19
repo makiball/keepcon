@@ -3,12 +3,10 @@ package kr.co.toplink.keepcon.ui.add
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.TextUtils.split
 import android.util.Log
 import android.view.Window
 import androidx.fragment.app.DialogFragment
@@ -16,6 +14,7 @@ import kr.co.toplink.keepcon.R
 import kr.co.toplink.keepcon.databinding.DialogAddCropChkBinding
 import kr.co.toplink.keepcon.dto.GifticonImg
 import kr.co.toplink.keepcon.dto.GifticonItemList
+import kr.co.toplink.keepcon.util.CustomImageView
 
 class CropImgDialogFragment(gifticonItemList: GifticonItemList, private val clickFromCv:String): DialogFragment() {
     private lateinit var binding:DialogAddCropChkBinding
@@ -36,13 +35,19 @@ class CropImgDialogFragment(gifticonItemList: GifticonItemList, private val clic
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         binding.ivCropImg.clipToOutline = true
 
-        val colorDrawable = ColorDrawable(Color.TRANSPARENT)
-        binding.ivCropImg.background  = colorDrawable
         binding.gifticonItemList = _gifticonItemList
 
 
-        binding.ivCropImg.setImageBitmap(_gifticonItemList.productName_bitmap)
-
+        //binding.ivProduceImg.setImageBitmap(_gifticonItemList.productName_bitmap)
+        /*
+        val productBitmap = _gifticonItemList.productName_bitmap!!
+        val pos_crop = _gifticonItemList.productPos!!.split(",").toTypedArray()
+        val left = pos_crop[0].toInt()
+        val top =  pos_crop[1].toInt()
+        val right =  pos_crop[2].toInt()
+        val bottom =  pos_crop[3].toInt()
+        binding.ivCropImg.setCustomBitmap(productBitmap, Rect(left,top,right,bottom))
+         */
 
         binding.btnCancel.setOnClickListener{
             dismiss()

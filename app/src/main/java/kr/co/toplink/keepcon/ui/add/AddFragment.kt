@@ -130,7 +130,6 @@ class AddFragment : Fragment(), onItemClick{
                 Activity.RESULT_OK -> {
                     val clipData = it.data!!.clipData
 
-
                     if (clipData != null) {  //첫 add
                         gifticonItemList.clear()
 
@@ -140,7 +139,7 @@ class AddFragment : Fragment(), onItemClick{
                             }
                         }
 
-                    } else{  //수동 크롭
+                    } else {  //수동 크롭
                         if (clickCv == PRODUCT){
                             //productImgUris[imgNum] = GifticonImg(Crop.getOutput(it.data))
                             //delImgUris.add(productImgUris[imgNum].imgUri)
@@ -149,10 +148,13 @@ class AddFragment : Fragment(), onItemClick{
                             //delImgUris.add(barcodeImgUris[imgNum].imgUri)
                         }
 
+                        Log.d(TAG,"=====> 크롭으로 자른후 !! ${Crop.getOutput(it.data)}")
+
                         // updateGifticonInfo(imgNum)
                         fillContent(imgNum)
                     }
                 }
+
                 Activity.RESULT_CANCELED -> {
                     if (gifticonItemList.size == 0){ // add탭 클릭 후 이미지 선택 안하고 뒤로가기 클릭 시
                         mainActivity.changeFragment(HomeFragment())
@@ -232,7 +234,6 @@ class AddFragment : Fragment(), onItemClick{
     private fun getFileSize(imgUri: Uri): Boolean{
         val file = File(getPath(imgUri))
         val fileSize = Integer.parseInt((file.length()).toString())
-
         if(fileSize > 1040000){
             return false
         }
@@ -246,7 +247,6 @@ class AddFragment : Fragment(), onItemClick{
         val cursor = cursorLoader.loadInBackground()!!
         val idx = cursor.getColumnIndexOrThrow(Images.Media.DATA)
         cursor.moveToFirst()
-
         return cursor.getString(idx)
     }
 
@@ -303,7 +303,6 @@ class AddFragment : Fragment(), onItemClick{
          */
     }
 
-
     // add탭 클릭하자마자 나오는 갤러리
     private fun openGalleryFirst() {
         val intent = Intent(Intent.ACTION_PICK)
@@ -324,7 +323,7 @@ class AddFragment : Fragment(), onItemClick{
         } else if (fromCv == BARCODE){
             destination = bitmap?.let { saveFile("popconImgBarcode", it) }
         }
-        val crop = Crop.of(gifticonItemList[idx].barcode_filepath, destination)
+        val crop = Crop.of(gifticonItemList[idx].barcode_filepath, destination).withAspect(10, 10)
         result.launch(crop.getIntent(mainActivity))
     }
 
@@ -402,11 +401,13 @@ class AddFragment : Fragment(), onItemClick{
         dialog.show(childFragmentManager, "CropDialog")
         dialog.setOnClickListener(object: CropImgDialogFragment.BtnClickListener{
             override fun onClicked(fromCv: String) {
+
                 if (fromCv == PRODUCT){
                     openGallery(imgNum, PRODUCT)
                 } else if (fromCv == BARCODE){
                     openGallery(imgNum, BARCODE)
                 }
+
             }
         })
     }
@@ -425,6 +426,7 @@ class AddFragment : Fragment(), onItemClick{
         if(pos_crop.size < 4) {
             return bitmap
         }
+
         val left = pos_crop[0].toInt()
         val top =  pos_crop[1].toInt()
         val right =  pos_crop[2].toInt()
