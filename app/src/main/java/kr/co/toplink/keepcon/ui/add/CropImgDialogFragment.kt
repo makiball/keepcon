@@ -2,23 +2,21 @@ package kr.co.toplink.keepcon.ui.add
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Context
-import android.graphics.*
+import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.text.TextUtils.split
 import android.util.Log
 import android.view.Window
 import androidx.fragment.app.DialogFragment
 import kr.co.toplink.keepcon.R
 import kr.co.toplink.keepcon.databinding.DialogAddCropChkBinding
-import kr.co.toplink.keepcon.dto.GifticonImg
 import kr.co.toplink.keepcon.dto.GifticonItemList
-import kr.co.toplink.keepcon.util.CustomImageView
 
 class CropImgDialogFragment(gifticonItemList: GifticonItemList, private val clickFromCv:String): DialogFragment() {
-    private lateinit var binding:DialogAddCropChkBinding
 
+    private val TAG = "bitmap.canvas!!!!"
+    private lateinit var binding:DialogAddCropChkBinding
     private var _gifticonItemList : GifticonItemList
 
     init {
@@ -37,6 +35,12 @@ class CropImgDialogFragment(gifticonItemList: GifticonItemList, private val clic
 
         binding.gifticonItemList = _gifticonItemList
 
+        binding.ivCropImg.setCustomBitmap(_gifticonItemList)
+
+        // Sizing the Dialog
+        val displayRectangle = Rect()
+        val xxxxx = displayRectangle.width() * 0.9f
+        Log.d(TAG, "======>x $xxxxx")
 
         //binding.ivProduceImg.setImageBitmap(_gifticonItemList.productName_bitmap)
         /*
@@ -65,6 +69,19 @@ class CropImgDialogFragment(gifticonItemList: GifticonItemList, private val clic
     }
 
     private lateinit var onClickListener: BtnClickListener
+
+    override fun onStart() {
+        super.onStart()
+
+        // DialogFragment의 가로 화면 크기 구하기
+        val dialog = dialog
+        val window = dialog?.window
+        val width = window?.decorView?.width
+
+
+        Log.d(TAG, "X======> $width")
+
+    }
 
     fun setOnClickListener(listener: BtnClickListener){
         onClickListener = listener

@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity() {
         //Log.d(TAG, "====> $fcmRepo")
 
         setNavBar()
-        checkPermissions()
+        //checkPermissions()
         callMMSReceiver()
         chkNewMMSImg()
 

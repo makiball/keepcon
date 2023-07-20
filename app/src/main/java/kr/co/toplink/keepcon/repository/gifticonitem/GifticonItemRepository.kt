@@ -14,9 +14,9 @@ class GifticonItemRepository(
             val gifticonItem = GifticonItem(
                 barcodeNum = Gifticon.barcodeNum,
                 barcodePos = Gifticon.barcodePos,
-                barcode_filepath = Gifticon.barcode_filepath,
+                gifticon_filepath = Gifticon.gifticon_filepath,
                 productName = Gifticon.productName,
-                productPost = Gifticon.productPost,
+                productPos = Gifticon.productPos,
                 brand = Gifticon.brand,
                 due = Gifticon.due,
                 price = Gifticon.price,

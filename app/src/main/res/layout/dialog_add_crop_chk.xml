@@ -15,27 +15,32 @@
         android:background="@drawable/edge_dialog"
         android:padding="8dp">
 
-
-        <kr.co.toplink.keepcon.util.CustomImageView
-            android:id="@+id/iv_crop_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:scaleType="fitCenter"
-            android:adjustViewBounds="true"
-            android:maxHeight="500dp"
-            android:background="@drawable/edge_dialog"
-            app:imageUri="@{gifticonItemList.barcode_filepath}"
+        <FrameLayout
+            android:id="@+id/iv_framelayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent">
 
+            <kr.co.toplink.keepcon.util.CustomImageView
+                android:id="@+id/iv_crop_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:maxHeight="500dp"
+                android:background="@drawable/edge_dialog"
+                app:imageUri="@{gifticonItemList.gifticon_filepath}"/>
+
+        </FrameLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/iv_crop_img"
+            app:layout_constraintTop_toBottomOf="@+id/iv_framelayout"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <Button

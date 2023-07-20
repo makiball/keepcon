@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatImageView
+import kr.co.toplink.keepcon.dto.GifticonItemList
 
 class CustomImageView @JvmOverloads constructor(
     context: Context,
@@ -13,22 +15,41 @@ class CustomImageView @JvmOverloads constructor(
     defStyle: Int = 0
 ) : AppCompatImageView(context, attrs, defStyle) {
 
+    private val TAG = "bitmap.canvas!!!!"
+    private lateinit var _gifticonItemList : GifticonItemList
+
     private val rectPaint: Paint = Paint().apply {
         color = 0xFF00FF00.toInt()
         style = Paint.Style.STROKE
         strokeWidth = 5f
     }
 
-    private val outerRectPaint: Paint = Paint().apply {
-        color = 0x80000000.toInt() // 투명도가 있는 검은색
+    private val grayPaint: Paint = Paint().apply {
+        color = Color.parseColor("#80808080") // 회색 투명처리 색상
+        style = Paint.Style.FILL
     }
 
     private var startX: Float = 0f
     private var startY: Float = 0f
     private var rect: RectF? = null
     private var isDragging = false
+    private var width: Int? = 0
+    private var height: Int? = 0
+    private var first: Int? = 0
+
+
+    // 사용자 정의 비트맵 설정 메서드
+    fun setCustomBitmap(gifticonItemList: GifticonItemList) {
+
+        _gifticonItemList = gifticonItemList
+
+        invalidate() // View를 다시 그리도록 호출
+    }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+
+        first = 1
+
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 startX = event.x
@@ -60,10 +81,31 @@ class CustomImageView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        // 사각형 외부를 투명 검은색 사각형으로 처리
-        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), outerRectPaint)
+        if(first == 0) {
+            val gap_width = canvas.width / _gifticonItemList.gifticon_file_width
+            val gap_height = canvas.height / _gifticonItemList.gifticon_file_height
 
+            val pos_crop = _gifticonItemList.productPos!!.split(",").toTypedArray()
+
+            val left = pos_crop[0].toFloat() * gap_width
+            val top =  pos_crop[1].toFloat()  * gap_height
+            val right =  pos_crop[2].toFloat()  * gap_width
+            val bottom =  pos_crop[3].toFloat() * gap_height
+
+            rect = RectF(left,top,right,bottom )
+            Log.d(TAG, "======>first $rect ${canvas.width} ${_gifticonItemList.gifticon_file_width}")
+        }
+
+
+        // 회색 투명처리
         rect?.let {
+
+            if(isDragging == false) {
+
+                //데이터 저장
+                Log.d(TAG, "======> $rect")
+            }
+            canvas.drawRect(it, grayPaint)
             canvas.drawRect(it, rectPaint)
         }
     }

@@ -6,6 +6,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.graphics.Rect
 import android.net.Uri
@@ -209,11 +210,15 @@ class AddFragment : Fragment(), onItemClick{
                     }
                 }
 
+                val imageSize = getBitmapSizeFromUri(requireContext(), originalImgUri)
+
                 gifticonItemList.add(
                     GifticonItemList(
                         barcodeNum = barcodeNum,
                         barcodePos = barcodePos,
-                        barcode_filepath = originalImgUri,
+                        gifticon_filepath = originalImgUri,
+                        gifticon_file_width = imageSize.first,
+                        gifticon_file_height = imageSize.second,
                         barcode_bitmap = cropToBitmap(uriToBitmap(originalImgUri), barcodePos!!),
                         productName = productName,
                         productPos = productPos,
@@ -250,6 +255,21 @@ class AddFragment : Fragment(), onItemClick{
         return cursor.getString(idx)
     }
 
+    // 이미지 크기 가져오기
+    fun getBitmapSizeFromUri(context: Context, uri: Uri): Pair<Int, Int> {
+        val options = BitmapFactory.Options()
+        options.inJustDecodeBounds = true
+
+        // 이미지 크기만 읽어옴
+        val inputStream = context.contentResolver.openInputStream(uri)
+        BitmapFactory.decodeStream(inputStream, null, options)
+        inputStream?.close()
+
+        val imageWidth = options.outWidth
+        val imageHeight = options.outHeight
+
+        return Pair(imageWidth, imageHeight)
+    }
 
     // 사진추가 버튼 클릭 시 뒤로가기
     private fun makeProgressDialogOnBackPressed(){
@@ -269,7 +289,7 @@ class AddFragment : Fragment(), onItemClick{
     private fun fillContent(idx: Int){
         imgNum = idx
 
-        gifticonImg = GifticonImg(gifticonItemList[imgNum].barcode_filepath)
+        gifticonImg = GifticonImg(gifticonItemList[imgNum].gifticon_filepath)
 
         binding.ivCouponImg.setImageBitmap(gifticonItemList[idx].productName_bitmap)
         binding.ivBarcodeImg.setImageBitmap(gifticonItemList[idx].barcode_bitmap)
@@ -315,7 +335,7 @@ class AddFragment : Fragment(), onItemClick{
 
     // cardView를 클릭했을 때 나오는 갤러리
     fun openGallery(idx: Int, fromCv: String) {
-        val bitmap = gifticonItemList[idx].barcode_filepath?.let { uriToBitmap(it) }
+        val bitmap = gifticonItemList[idx].gifticon_filepath?.let { uriToBitmap(it) }
         var destination:Uri? = "".toUri()
 
         if (fromCv == PRODUCT){
@@ -323,7 +343,7 @@ class AddFragment : Fragment(), onItemClick{
         } else if (fromCv == BARCODE){
             destination = bitmap?.let { saveFile("popconImgBarcode", it) }
         }
-        val crop = Crop.of(gifticonItemList[idx].barcode_filepath, destination).withAspect(10, 10)
+        val crop = Crop.of(gifticonItemList[idx].gifticon_filepath, destination).withAspect(10, 10)
         result.launch(crop.getIntent(mainActivity))
     }
 
