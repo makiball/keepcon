@@ -19,6 +19,9 @@ class CropImgDialogFragment(gifticonItemList: GifticonItemList, private val clic
     private lateinit var binding:DialogAddCropChkBinding
     private var _gifticonItemList : GifticonItemList
 
+    val PRODUCT = "Product"
+    val BARCODE = "Barcode"
+
     init {
         _gifticonItemList = gifticonItemList
     }
@@ -35,12 +38,20 @@ class CropImgDialogFragment(gifticonItemList: GifticonItemList, private val clic
 
         binding.gifticonItemList = _gifticonItemList
 
-        binding.ivCropImg.setCustomBitmap(_gifticonItemList)
+        if(clickFromCv == PRODUCT) {
+            _gifticonItemList.productName_bitmap?.let { binding.ivCropImg.setCustomBitmap(it) }
+        }
 
+        if(clickFromCv == BARCODE) {
+            _gifticonItemList.barcode_bitmap?.let { binding.ivCropImg.setCustomBitmap(it) }
+        }
+
+        /*
         // Sizing the Dialog
         val displayRectangle = Rect()
         val xxxxx = displayRectangle.width() * 0.9f
         Log.d(TAG, "======>x $xxxxx")
+         */
 
         //binding.ivProduceImg.setImageBitmap(_gifticonItemList.productName_bitmap)
         /*

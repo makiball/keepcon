@@ -18,96 +18,44 @@ class CustomImageView @JvmOverloads constructor(
     private val TAG = "bitmap.canvas!!!!"
     private lateinit var _gifticonItemList : GifticonItemList
 
-    private val rectPaint: Paint = Paint().apply {
-        color = 0xFF00FF00.toInt()
-        style = Paint.Style.STROKE
-        strokeWidth = 5f
-    }
-
-    private val grayPaint: Paint = Paint().apply {
-        color = Color.parseColor("#80808080") // 회색 투명처리 색상
-        style = Paint.Style.FILL
-    }
-
-    private var startX: Float = 0f
-    private var startY: Float = 0f
-    private var rect: RectF? = null
-    private var isDragging = false
-    private var width: Int? = 0
-    private var height: Int? = 0
-    private var first: Int? = 0
-
+    private val paint: Paint = Paint()
+    private lateinit var bitmap: Bitmap
 
     // 사용자 정의 비트맵 설정 메서드
-    fun setCustomBitmap(gifticonItemList: GifticonItemList) {
+    fun setCustomBitmap(bitmap: Bitmap) {
 
-        _gifticonItemList = gifticonItemList
+        this.bitmap = bitmap
 
         invalidate() // View를 다시 그리도록 호출
-    }
-
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-
-        first = 1
-
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                startX = event.x
-                startY = event.y
-                rect = RectF(startX, startY, startX, startY)
-                invalidate()
-                return true
-            }
-            MotionEvent.ACTION_MOVE -> {
-                rect?.right = event.x
-                rect?.bottom = event.y
-                isDragging = true
-                invalidate()
-                return true
-            }
-            MotionEvent.ACTION_UP -> {
-                if (isDragging) {
-                    isDragging = false
-                } else {
-                    rect = null
-                }
-                invalidate()
-                return true
-            }
-        }
-        return super.onTouchEvent(event)
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        if(first == 0) {
-            val gap_width = canvas.width / _gifticonItemList.gifticon_file_width
-            val gap_height = canvas.height / _gifticonItemList.gifticon_file_height
+        val aspectRatio = (bitmap.width.toFloat() / bitmap.height.toFloat())
 
-            val pos_crop = _gifticonItemList.productPos!!.split(",").toTypedArray()
+        val targetWidth: Float
+        val targetHeight: Float
 
-            val left = pos_crop[0].toFloat() * gap_width
-            val top =  pos_crop[1].toFloat()  * gap_height
-            val right =  pos_crop[2].toFloat()  * gap_width
-            val bottom =  pos_crop[3].toFloat() * gap_height
-
-            rect = RectF(left,top,right,bottom )
-            Log.d(TAG, "======>first $rect ${canvas.width} ${_gifticonItemList.gifticon_file_width}")
+        if (aspectRatio > 1.0f) {
+            // 이미지가 가로로 넓은 경우
+            targetWidth = width.toFloat()
+            targetHeight = (width / aspectRatio)
+        } else {
+            // 이미지가 세로로 높은 경우
+            targetHeight = height.toFloat()
+            targetWidth = (height * aspectRatio)
         }
 
+        Log.d(TAG, "==> 세로가로 높이 $aspectRatio")
 
-        // 회색 투명처리
-        rect?.let {
+        val left = (width - targetWidth) / 2
+        val top = (height - targetHeight) / 2
 
-            if(isDragging == false) {
+        val rectF = RectF(left.toFloat(), top.toFloat(), (left + targetWidth).toFloat(), (top + targetHeight).toFloat())
 
-                //데이터 저장
-                Log.d(TAG, "======> $rect")
-            }
-            canvas.drawRect(it, grayPaint)
-            canvas.drawRect(it, rectPaint)
-        }
+        canvas.drawColor(Color.WHITE)
+        canvas.drawBitmap(bitmap, null, rectF, paint)
     }
 
     /*

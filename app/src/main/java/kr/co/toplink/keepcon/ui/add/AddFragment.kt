@@ -52,6 +52,8 @@ class AddFragment : Fragment(), onItemClick{
     private val regex = "[^0-9,]".toRegex()
     private var gifticonImg : GifticonImg? = null
 
+    private lateinit var keepTempImg : Uri
+
     private var loadingDialog = ProgressDialog(false)
     private lateinit var addImgAdapter: AddImgAdapter
     val user = ApplicationClass.sharedPreferencesUtil.getUser()
@@ -107,6 +109,7 @@ class AddFragment : Fragment(), onItemClick{
         binding.cvBarcodeImg.setOnClickListener(object : onSingleClickListener(){
             override fun onSingleClick(v: View) {
                 clickCv = BARCODE
+                seeCropImgDialog(gifticonItemList[imgNum], BARCODE)
             }
         })
 
@@ -125,7 +128,7 @@ class AddFragment : Fragment(), onItemClick{
         }
     }
 
-    private val result =
+    private val result_gallery =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
             when (it.resultCode) {
                 Activity.RESULT_OK -> {
@@ -140,19 +143,6 @@ class AddFragment : Fragment(), onItemClick{
                             }
                         }
 
-                    } else {  //수동 크롭
-                        if (clickCv == PRODUCT){
-                            //productImgUris[imgNum] = GifticonImg(Crop.getOutput(it.data))
-                            //delImgUris.add(productImgUris[imgNum].imgUri)
-                        } else if (clickCv == BARCODE){
-                            //barcodeImgUris[imgNum] = GifticonImg(Crop.getOutput(it.data))
-                            //delImgUris.add(barcodeImgUris[imgNum].imgUri)
-                        }
-
-                        Log.d(TAG,"=====> 크롭으로 자른후 !! ${Crop.getOutput(it.data)}")
-
-                        // updateGifticonInfo(imgNum)
-                        fillContent(imgNum)
                     }
                 }
 
@@ -164,6 +154,34 @@ class AddFragment : Fragment(), onItemClick{
             }
         }
 
+    private val result_crop =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            when (it.resultCode) {
+                Activity.RESULT_OK -> {
+                    if (clickCv == PRODUCT){
+                        //productImgUris[imgNum] = GifticonImg(Crop.getOutput(it.data))
+                        //delImgUris.add(productImgUris[imgNum].imgUri)
+
+                        gifticonItemList[imgNum].productName_bitmap = uriToBitmap(Crop.getOutput(it.data))
+
+                    } else if (clickCv == BARCODE){
+                        //barcodeImgUris[imgNum] = GifticonImg(Crop.getOutput(it.data))
+                        //delImgUris.add(barcodeImgUris[imgNum].imgUri)
+
+                        gifticonItemList[imgNum].barcode_bitmap = uriToBitmap(Crop.getOutput(it.data))
+                    }
+
+                    delCropImg(keepTempImg)
+
+                    // updateGifticonInfo(imgNum)
+                    fillContent(imgNum)
+                }
+
+                Activity.RESULT_CANCELED -> {
+                    delCropImg(keepTempImg)
+                }
+            }
+        }
 
     //리스트 이미지 등록
     private suspend fun gallyadd(clipData: ClipData){
@@ -185,6 +203,7 @@ class AddFragment : Fragment(), onItemClick{
             var productName : String? = null
             var brand : String? = null
             var productPos = ProductBox.ETC.box
+            var due : String? = null
 
             // 바코드 정보 활용
             for (barcode in barcodes) {
@@ -198,6 +217,19 @@ class AddFragment : Fragment(), onItemClick{
             //바코드 있는것만
             if(barcodeNum != null) {
                 if(texts.size > 0) {
+
+                    for(text in texts) {
+                        if(extractPatternDue(text) != "") {
+                            due = extractPatternDue(text)
+
+                            Log.d(TAG,"====> text ${extractPatternDue(text)}")
+                        }
+
+                        if(isResourceKeyExists(text)) {
+                            brand = text
+                        }
+
+                    }
 
                     productName = texts.get(0)
 
@@ -223,7 +255,8 @@ class AddFragment : Fragment(), onItemClick{
                         productName = productName,
                         productPos = productPos,
                         productName_bitmap = cropToBitmap(uriToBitmap(originalImgUri), productPos),
-                        brand = brand
+                        brand = brand,
+                        due = due
                     )
                 )
             }
@@ -299,6 +332,8 @@ class AddFragment : Fragment(), onItemClick{
         binding.etProductName.setText(gifticonItemList[idx].productName)
         binding.etProductBrand.setText(gifticonItemList[idx].brand)
 
+        binding.etDate.setText(gifticonItemList[idx].due)
+
         binding.cbPrice.isChecked = false
         binding.lPrice.visibility = View.GONE
 
@@ -328,27 +363,33 @@ class AddFragment : Fragment(), onItemClick{
         val intent = Intent(Intent.ACTION_PICK)
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
         intent.setDataAndType(Images.Media.EXTERNAL_CONTENT_URI, "image/*")
-        result.launch(intent)
+        result_gallery.launch(intent)
 
         changeProgressDialogState(true)
     }
 
     // cardView를 클릭했을 때 나오는 갤러리
     fun openGallery(idx: Int, fromCv: String) {
-        val bitmap = gifticonItemList[idx].gifticon_filepath?.let { uriToBitmap(it) }
-        var destination:Uri? = "".toUri()
 
+        val bitmap = uriToBitmap(gifticonItemList[idx].gifticon_filepath )
+        //val destination:Uri? = "".toUri()
+/*
         if (fromCv == PRODUCT){
             destination = bitmap?.let { saveFile("popconImgProduct", it) }
         } else if (fromCv == BARCODE){
             destination = bitmap?.let { saveFile("popconImgBarcode", it) }
         }
-        val crop = Crop.of(gifticonItemList[idx].gifticon_filepath, destination).withAspect(10, 10)
-        result.launch(crop.getIntent(mainActivity))
+
+ */
+
+        keepTempImg = saveFile("keepTempImg", bitmap)!!
+
+        val crop = Crop.of(gifticonItemList[idx].gifticon_filepath, keepTempImg)
+        result_crop.launch(crop.getIntent(mainActivity))
     }
 
     // 크롭한 이미지 저장
-    private fun saveFile(fileName:String, bitmap: Bitmap):Uri?{
+    private fun saveFile(fileName:String, bitmap: Bitmap):Uri {
         val values = ContentValues()
         values.put(Images.Media.DISPLAY_NAME, fileName)
         values.put(Images.Media.MIME_TYPE, "image/jpeg")
@@ -374,7 +415,7 @@ class AddFragment : Fragment(), onItemClick{
                 }
             }
         }
-        return uri
+        return uri!!
     }
 
     // uri -> bitmap
@@ -459,6 +500,12 @@ class AddFragment : Fragment(), onItemClick{
         return croppedBitmap
     }
 
+    // 크롭되면서 새로 생성된 이미지 삭제
+    fun delCropImg(delImgUri: Uri){
+        val file = File(getPath(delImgUri))
+        file.delete()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         changeProgressDialogState(false)
@@ -473,4 +520,18 @@ class AddFragment : Fragment(), onItemClick{
         mainActivity.hideBottomNav(false)
         isShow = false
     }
+
+    fun extractPatternDue(inputString: String): String? {
+        val regex_due = "20\\d{2}\\D+\\d{2}\\D+\\d{2}".toRegex()
+        val regex_digit = "[^\\d]".toRegex()
+        val result_due = regex_due.find(inputString)?.value.toString()
+        val result = regex_digit.replace(result_due, "")
+        return result
+    }
+
+    fun isResourceKeyExists(key: String): Boolean {
+        val resId: Int = requireContext().resources.getIdentifier(key, "string", requireContext().packageName)
+        return resId != 0
+    }
+
 }

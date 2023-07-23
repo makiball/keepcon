@@ -186,16 +186,16 @@ data class AddImgInfoResult(
 
 data class GifticonItemList(
     val barcodeNum:	            String? = null,
-    val gifticon_filepath:	    Uri? = null,
+    val gifticon_filepath:	    Uri,
     val gifticon_file_width:    Int = 0,
     val gifticon_file_height:   Int = 0,
     val barcodePos:	            String? = null,
-    val barcode_bitmap:	        Bitmap? = null,
+    var barcode_bitmap:	        Bitmap? = null,
     val productName:		    String? = null,
     val productPos:             String? = null,
-    val productName_bitmap:	    Bitmap? = null,
+    var productName_bitmap:	    Bitmap? = null,
     val brand:			        String? = null,
-    val due:                    Date? = Date(),
+    val due:                    String? = null,
     val price:		            Int = 0,
     val memo:		            String? = null,
     val state:		            Int = 0

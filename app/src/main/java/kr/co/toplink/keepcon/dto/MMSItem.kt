@@ -19,7 +19,8 @@ data class MMSItem(
     tableName = "gifticon_item"
 )
 data class GifticonItem(
-    @PrimaryKey @ColumnInfo(name = "barcodeNum")
+    @PrimaryKey
+    @ColumnInfo(name = "barcodeNum")
     val barcodeNum:	            String,
     val gifticon_filepath:	    String? = null,
     val gifticon_file_width:    String? = null,
