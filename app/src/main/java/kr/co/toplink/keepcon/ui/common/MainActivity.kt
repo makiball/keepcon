@@ -93,15 +93,15 @@ class MainActivity : AppCompatActivity() {
 
         setNavBar()
         //checkPermissions()
-        callMMSReceiver()
-        chkNewMMSImg()
+        //callMMSReceiver()
+        //chkNewMMSImg()
 
         //자동로그인
         if (SharedPreferencesUtil(this).getUser().email != "") {
             Log.d(TAG, "onCreate: 로그인됨")
             sendUserData()
             changeFragment(HomeFragment())
-            makeGalleryDialogFragment(applicationContext, contentResolver)
+            //makeGalleryDialogFragment(applicationContext, contentResolver)
         } else {
             Log.d(TAG, "onCreate: 로그인 필요")
             changeFragment(LoginFragment())

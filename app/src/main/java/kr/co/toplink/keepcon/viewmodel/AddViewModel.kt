@@ -32,6 +32,14 @@ class AddViewModel(private val addRepository: AddRepository): ViewModel() {
     private val _addImgInfoResult = MutableLiveData<Event<List<List<AddImgInfoResult>>>>()
     val addImgInfoResult: LiveData<Event<List<List<AddImgInfoResult>>>> = _addImgInfoResult
 
+    //뷰 모델에 데이터 저장하기
+    private val _gifticonItemList = MutableLiveData<Event<List<GifticonItemList>>>()
+    val gifticonItemList: LiveData<Event<List<GifticonItemList>>> = _gifticonItemList
+
+    fun addGifticonItemList(gifticonItemList : List<GifticonItemList>) {
+        _gifticonItemList.value = Event(gifticonItemList)
+    }
+
     fun addFileToGCP(files: Array<MultipartBody.Part>){
         viewModelScope.launch {
             _gcpResult.value = Event(addRepository.addFileToGCP(files))

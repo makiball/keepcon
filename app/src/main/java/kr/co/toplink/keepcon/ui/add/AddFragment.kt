@@ -94,6 +94,9 @@ class AddFragment : Fragment(), onItemClick{
         chkCnt = 1
         openGalleryFirst()
 
+
+        Log.d(TAG, "=====> ${gifticonItemList.size}")
+
         binding.cvAddCoupon.setOnClickListener {
             makeProgressDialogOnBackPressed()
             openGalleryFirst()
@@ -259,6 +262,10 @@ class AddFragment : Fragment(), onItemClick{
                         due = due
                     )
                 )
+
+//                viewModel.addGifticonItemList(gifticonItemList)
+//                viewModel.gifticonItemList.observe(viewLifecycleOwner,)
+
             }
         }
 
