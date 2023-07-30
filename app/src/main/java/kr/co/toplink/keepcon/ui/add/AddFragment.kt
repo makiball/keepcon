@@ -12,6 +12,8 @@ import android.graphics.Rect
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore.Images
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -84,6 +86,7 @@ class AddFragment : Fragment(), onItemClick{
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         binding = FragmentAddBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -123,13 +126,39 @@ class AddFragment : Fragment(), onItemClick{
         }
 
         binding.cbPrice.setOnClickListener{
-
+            clickChkState(imgNum)
         }
+
+        productChk()
 
         binding.btnRegi.setOnClickListener {
 
         }
     }
+
+    // 상품명 리스트에 저장
+    private fun productChk(){
+        binding.etProductName.addTextChangedListener (object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                val pLength = p0.toString().length
+                if(pLength < 1){
+                    binding.tilProductName.error = "상품명을 입력해주세요"
+                } else{
+                    binding.tilProductName.error = null
+                    binding.tilProductName.isErrorEnabled = false
+                    gifticonItemList[imgNum].productName = binding.etProductName.text.toString()
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
+    }
+
+
 
     private val result_gallery =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
@@ -228,8 +257,8 @@ class AddFragment : Fragment(), onItemClick{
                             Log.d(TAG,"====> text ${extractPatternDue(text)}")
                         }
 
-                        if(isResourceKeyExists(text)) {
-                            brand = text
+                        if(isResourceKeyExists(text) != "") {
+                            brand = isResourceKeyExists(text)
                         }
 
                     }
@@ -373,6 +402,20 @@ class AddFragment : Fragment(), onItemClick{
         result_gallery.launch(intent)
 
         changeProgressDialogState(true)
+    }
+
+    // 체크박스 클릭 시 상태변화
+    private fun clickChkState(idx: Int){
+        val chkState = binding.cbPrice.isChecked
+        if (!chkState){
+            gifticonItemList[imgNum].price = -1
+            binding.cbPrice.isChecked = false
+            binding.lPrice.visibility = View.GONE
+            binding.etPrice.setText("-1")
+        } else{
+            binding.cbPrice.isChecked = true
+            binding.lPrice.visibility = View.VISIBLE
+        }
     }
 
     // cardView를 클릭했을 때 나오는 갤러리
@@ -536,9 +579,32 @@ class AddFragment : Fragment(), onItemClick{
         return result
     }
 
-    fun isResourceKeyExists(key: String): Boolean {
-        val resId: Int = requireContext().resources.getIdentifier(key, "string", requireContext().packageName)
-        return resId != 0
+    fun isResourceKeyExists(key: String): String {
+
+        val wordsArray = key.split(" ").toTypedArray()
+        var brand = ""
+        val brandArray = resources.getStringArray(R.array.brand_array_name)
+
+        wordsArray.forEach {
+            if(brandArray.contains(it)) {
+                brand = it
+            }
+        }
+
+        return brand
+/*
+        for ((index, item) in brandArray.withIndex()) {
+
+            Log.d(TAG, "=====>x $item")
+            /*
+            val resId: Int = requireContext().resources.getIdentifier(word, "brand", requireContext().packageName)
+            if(resId != 0) {
+                brand = word
+            }
+             */
+        }
+ */
+
     }
 
 }

@@ -191,12 +191,12 @@ data class GifticonItemList(
     val gifticon_file_height:   Int = 0,
     val barcodePos:	            String? = null,
     var barcode_bitmap:	        Bitmap? = null,
-    val productName:		    String? = null,
+    var productName:		    String? = null,
     val productPos:             String? = null,
     var productName_bitmap:	    Bitmap? = null,
     val brand:			        String? = null,
     val due:                    String? = null,
-    val price:		            Int = 0,
+    var price:		            Int = 0,
     val memo:		            String? = null,
     val state:		            Int = 0
 )
