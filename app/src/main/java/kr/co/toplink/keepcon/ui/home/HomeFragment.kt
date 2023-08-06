@@ -35,6 +35,7 @@ import kr.co.toplink.keepcon.ui.popup.GifticonViewAdapter
 import kr.co.toplink.keepcon.ui.settings.SettingsFragment
 import kr.co.toplink.keepcon.util.ShakeDetector
 import kr.co.toplink.keepcon.util.SharedPreferencesUtil
+import kr.co.toplink.keepcon.viewmodel.GifticonItemViewModel
 import kr.co.toplink.keepcon.viewmodel.GifticonViewModel
 import kr.co.toplink.keepcon.viewmodel.ViewModelFactory
 
@@ -45,7 +46,7 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var shakeDetector: ShakeDetector
     lateinit var gifticonAdapter: GiftconAdapter
-    private val viewModel: GifticonViewModel by activityViewModels { ViewModelFactory(requireContext()) }
+    private val viewModel: GifticonItemViewModel by activityViewModels { ViewModelFactory(requireContext()) }
     private lateinit var mainActivity: MainActivity
 
     override fun onAttach(context: Context) {
@@ -80,13 +81,14 @@ class HomeFragment : Fragment() {
         binding.viewModel = viewModel
 
         setGifticonAdapter()
-        openGifticonDialog()
+        //openGifticonDialog()
 
         binding.btnHistory.setOnClickListener {
             mainActivity.addFragment(HistoryFragment())
         }
     }
 
+    /*
     private fun openGifticonDialog() {
         viewModel.openGifticonDialogEvent.observe(viewLifecycleOwner, EventObserver {
             Log.d(TAG, "openGifticonDialog: $it")
@@ -97,12 +99,11 @@ class HomeFragment : Fragment() {
             dialogFragment.show(childFragmentManager, "popup")
         })
     }
-
+     */
 
     //홈 기프티콘 어댑터 설정
     private fun setGifticonAdapter() {
         gifticonAdapter = GiftconAdapter(viewModel)
-        viewModel.getGifticonByUser(SharedPreferencesUtil(requireContext()).getUser())
         viewModel.gifticons.observe(viewLifecycleOwner) {
             binding.tvNoGifticon.isVisible = it.isEmpty()
 
@@ -118,6 +119,7 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
 
     //홈화면 켜지면 센서 설정
     private fun setSensor() {

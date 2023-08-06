@@ -22,14 +22,14 @@ data class GifticonItem(
     @PrimaryKey
     @ColumnInfo(name = "barcodeNum")
     val barcodeNum:	            String,
-    val gifticon_filepath:	    String? = null,
-    val gifticon_file_width:    String? = null,
-    val gifticon_file_height:   String? = null,
+    val gifticon_filepath:	    String,
+    val gifticon_file_width:    Int = 0,
+    val gifticon_file_height:   Int = 0,
     val barcodePos:	            String? = null,
     val productName:		    String? = null,
     val productPos:             String? = null,
     val brand:			        String? = null,
-    val due:                    Date?,
+    val due:                    String? = null,
     val price:		            Int = 0,
     val memo:		            String? = null,
     val state:		            Int = 0

@@ -37,17 +37,22 @@ import kr.co.toplink.keepcon.ui.home.HomeFragment
 import kr.co.toplink.keepcon.ui.popup.GifticonDialogFragment.Companion.isShow
 import kr.co.toplink.keepcon.viewmodel.AddViewModel
 import kr.co.toplink.keepcon.viewmodel.ViewModelFactory
+import kr.co.toplink.keepcon.viewmodel.GifticonItemViewModel
 import kotlinx.coroutines.*
 import kr.co.toplink.keepcon.ui.home.ProductBox
 import kr.co.toplink.keepcon.util.BarcodeAndTextExtractor
 import java.io.*
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.collections.ArrayList
 
 private const val TAG = "AddFragment"
 class AddFragment : Fragment(), onItemClick{
     private lateinit var binding: FragmentAddBinding
     private lateinit var mainActivity: MainActivity
-    private val viewModel: AddViewModel by viewModels { ViewModelFactory(requireContext()) }
+    //private val viewModel: AddViewModel by viewModels { ViewModelFactory(requireContext()) }
+
+    private val viewModel : GifticonItemViewModel by viewModels { ViewModelFactory(requireContext()) }
 
     //새로 만들자
     private var gifticonItemList = ArrayList<GifticonItemList>()
@@ -130,9 +135,41 @@ class AddFragment : Fragment(), onItemClick{
         }
 
         productChk()
+        brandChk()
+        brandBarcodeNum()
+        dateFormat()
+        setMemo()
 
         binding.btnRegi.setOnClickListener {
+            Log.d(TAG,"=========> ${gifticonItemList[imgNum]}")
 
+            viewModel.addGifticonItem(
+                GifticonItem(
+                    barcodeNum = gifticonItemList[imgNum].barcodeNum!!,
+                    gifticon_filepath = gifticonItemList[imgNum].gifticon_filepath.toString(),
+                    gifticon_file_width = gifticonItemList[imgNum].gifticon_file_width,
+                    gifticon_file_height = gifticonItemList[imgNum].gifticon_file_height,
+                    barcodePos = gifticonItemList[imgNum].barcodePos,
+                    productName = gifticonItemList[imgNum].productName,
+                    productPos = gifticonItemList[imgNum].productPos,
+                    brand = gifticonItemList[imgNum].brand,
+                    due = gifticonItemList[imgNum].due,
+                    price = gifticonItemList[imgNum].price,
+                    memo = gifticonItemList[imgNum].memo,
+                    state = gifticonItemList[imgNum].state
+                )
+            )
+
+            Log.d(TAG,"=====> ${viewModel.getGifticonItem()} ")
+
+            gifticonItemList.removeAt(imgNum)
+
+            if (gifticonItemList.size == 0){ // add탭 클릭 후 이미지 선택 안하고 뒤로가기 클릭 시
+                mainActivity.changeFragment(HomeFragment())
+                return@setOnClickListener
+            }
+            fillContent(imgNum)
+            makeImgList()
         }
     }
 
@@ -158,7 +195,132 @@ class AddFragment : Fragment(), onItemClick{
         })
     }
 
+    // 브랜드 존재여부 검사
+    private fun brandChk() {
+        binding.etProductBrand.addTextChangedListener(object : TextWatcher {
 
+            override fun afterTextChanged(p0: Editable?) {
+                val pLength = p0.toString().length
+                if(pLength < 1){
+                    binding.tilProductBrand.error = "브랜드명을 입력해주세요"
+                } else{
+                    binding.tilProductBrand.error = null
+                    binding.tilProductBrand.isErrorEnabled = false
+                    gifticonItemList[imgNum].brand = binding.etProductBrand.text.toString()
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
+    }
+
+    // 바코드 번호 검사
+    private fun brandBarcodeNum() {
+        binding.etBarcode.addTextChangedListener(object : TextWatcher{
+
+            override fun afterTextChanged(p0: Editable?) {
+                val pLength = p0.toString().length
+                if(pLength < 1){
+                    binding.tilBarcode.error = "바코드를 입력해주세요"
+                } else{
+                    binding.tilBarcode.error = null
+                    binding.tilBarcode.isErrorEnabled = false
+                    gifticonItemList[imgNum].barcodeNum = binding.etBarcode.text.toString()
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
+    }
+
+    //유효기간 검사
+    val dateArr = arrayOf(31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+    private fun dateFormat() {
+        binding.etDate.addTextChangedListener(object : TextWatcher{
+            override fun afterTextChanged(p0: Editable?) {
+                val dateLength = binding.etDate.text!!.length
+                val nowText = p0.toString()
+
+                when (dateLength){
+                    10 -> {
+                        val newYear = nowText.substring(0, 4).toInt()
+                        val newMonth = nowText.substring(5, 7).toInt()
+                        val newDay = nowText.substring(8).toInt()
+
+                        val nowYear = SimpleDateFormat("yyyy", Locale.getDefault()).format(System.currentTimeMillis()).toInt()
+                        val nowDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(System.currentTimeMillis())
+                        val nowDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(nowDateFormat)
+                        var newDate = Date()
+                        try {
+                            newDate =  SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(p0.toString())!!
+                        } catch (e: java.lang.Exception){
+                            newDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(nowDateFormat)!!
+                        }
+
+                        val calDate = newDate.compareTo(nowDate)
+
+                        if (newYear > 2100 || newYear.toString().length < 4){
+                            binding.tilDate.error = "정확한 날짜를 입력해주세요"
+                        } else if(newMonth < 1 || newMonth > 12){
+                            binding.tilDate.error = "정확한 날짜를 입력해주세요"
+                        } else if(newDay > dateArr[newMonth-1] || newDay == 0){
+                            binding.tilDate.error = "정확한 날짜를 입력해주세요"
+                        } else if (calDate < 0){
+                            binding.tilDate.error = "이미 지난 날짜입니다"
+                        } else{
+                            binding.tilDate.error = null
+                            binding.tilDate.isErrorEnabled = false
+                            gifticonItemList[imgNum].due = nowText
+                        }
+                    }
+                    else -> {
+                        binding.tilDate.error = "정확한 날짜를 입력해주세요"
+                    }
+                }
+
+                if (dateLength < 10){
+                    binding.tilDate.error = "정확한 날짜를 입력해주세요"
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                //p0: 현재 입력된 문자열, p1: 새로 추가될 문자열 위치, p2: 변경될 문자열의 수, p3: 새로 추가될 문자열 수
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                //p0: 현재 입력된 문자열, p1: 새로 추가될 문자열 위치, p2: 삭제된 기존 문자열 수, p3: 새로 추가될 문자열 수
+                val dateLength = binding.etDate.text!!.length
+                if(dateLength==4 && p1!=4 || dateLength==7 && p1!=7){
+                    val add = binding.etDate.text.toString() + "-"
+                    binding.etDate.setText(add)
+                    binding.etDate.setSelection(add.length)
+                }
+            }
+        })
+    }
+
+    // memo를 리스트에 저장
+    private fun setMemo(){
+        binding.etWriteMemo.addTextChangedListener (object : TextWatcher{
+            override fun afterTextChanged(p0: Editable?) {
+                gifticonItemList[imgNum].memo = binding.etWriteMemo.text.toString()
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
+    }
 
     private val result_gallery =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
@@ -360,15 +522,15 @@ class AddFragment : Fragment(), onItemClick{
 
         gifticonImg = GifticonImg(gifticonItemList[imgNum].gifticon_filepath)
 
-        binding.ivCouponImg.setImageBitmap(gifticonItemList[idx].productName_bitmap)
-        binding.ivBarcodeImg.setImageBitmap(gifticonItemList[idx].barcode_bitmap)
+        binding.ivCouponImg.setImageBitmap(gifticonItemList[imgNum].productName_bitmap)
+        binding.ivBarcodeImg.setImageBitmap(gifticonItemList[imgNum].barcode_bitmap)
 
-        binding.etBarcode.setText(gifticonItemList[idx].barcodeNum)
+        binding.etBarcode.setText(gifticonItemList[imgNum].barcodeNum)
 
-        binding.etProductName.setText(gifticonItemList[idx].productName)
-        binding.etProductBrand.setText(gifticonItemList[idx].brand)
-
-        binding.etDate.setText(gifticonItemList[idx].due)
+        binding.etProductName.setText(gifticonItemList[imgNum].productName)
+        binding.etProductBrand.setText(gifticonItemList[imgNum].brand)
+        binding.etDate.setText(gifticonItemList[imgNum].due)
+        binding.etWriteMemo.setText(gifticonItemList[imgNum].memo)
 
         binding.cbPrice.isChecked = false
         binding.lPrice.visibility = View.GONE
@@ -507,6 +669,7 @@ class AddFragment : Fragment(), onItemClick{
     }
 
     // 크롭된 이미지 다이얼로그
+
     private fun seeCropImgDialog(gifticonItemList: GifticonItemList, clickFromCv:String){
         val dialog = CropImgDialogFragment(gifticonItemList, clickFromCv)
         dialog.show(childFragmentManager, "CropDialog")
@@ -574,8 +737,13 @@ class AddFragment : Fragment(), onItemClick{
     fun extractPatternDue(inputString: String): String? {
         val regex_due = "20\\d{2}\\D+\\d{2}\\D+\\d{2}".toRegex()
         val regex_digit = "[^\\d]".toRegex()
+        val regex_hyphen = "(\\d{4})(\\d{2})(\\d{2})".toRegex()
         val result_due = regex_due.find(inputString)?.value.toString()
-        val result = regex_digit.replace(result_due, "")
+        var result = regex_digit.replace(result_due, "")
+
+        if(result.length >= 8) {
+            result = result.replace(regex_hyphen, "$1-$2-$3")
+        }
         return result
     }
 

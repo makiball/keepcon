@@ -9,7 +9,7 @@
             type="kr.co.toplink.keepcon.dto.User" />
         <variable
             name="viewModel"
-            type="kr.co.toplink.keepcon.viewmodel.GifticonViewModel" />
+            type="kr.co.toplink.keepcon.viewmodel.GifticonItemViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
